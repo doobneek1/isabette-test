@@ -1,36 +1,80 @@
 {
+
   "name": "income-expense-app",
+
   "version": "0.1.0",
+
   "private": true,
+
   "dependencies": {
+
     "firebase": "^9.22.2",
+
     "jquery": "^3.7.1",
+
+    "plotly.js-dist": "^3.0.1",
+
     "react": "^18.2.0",
+
     "react-dom": "^18.2.0",
+
     "react-scripts": "5.0.1"
+
   },
+
   "scripts": {
+
     "start": "react-scripts start",
+
     "build": "cross-env CI=false react-scripts build",
+
     "test": "react-scripts test",
+
     "eject": "react-scripts eject"
+
   },
+
   "eslintConfig": {
+
     "extends": [
+
       "react-app",
+
       "react-app/jest"
+
     ]
+
   },
+
   "browserslist": {
+
     "production": [
+
       ">0.2%",
+
       "not dead",
+
       "not op_mini all"
+
     ],
+
     "development": [
+
       "last 1 chrome version",
+
       "last 1 firefox version",
+
       "last 1 safari version"
+
     ]
+
+  },
+
+  "devDependencies": {
+
+    "cross-env": "^7.0.3"
+
   }
+
 }
+
