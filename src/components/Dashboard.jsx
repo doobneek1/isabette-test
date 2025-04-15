@@ -243,6 +243,7 @@ export default function Dashboard({ entries }) {
       } else {
         netWorth.push(null);
       }
+      
     });
 
     // Rent burden and taxes
