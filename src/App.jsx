@@ -703,6 +703,121 @@
 //     </div>
 //   );
 // }
+// import React, { useEffect, useState } from "react";
+// import Form from "./components/Form";
+// import EntryTable from "./components/EntryTable";
+// import Dashboard from "./components/Dashboard";
+// import { db, ref, push, onValue } from "./firebase";
+// import { auth, provider } from "./firebase";
+// import {
+//   signInWithRedirect,
+//   getRedirectResult,
+//   signOut,
+//   onAuthStateChanged,
+// } from "firebase/auth";
+
+// const ALLOWED_EMAIL = "doobneek@gmail.com"; // ✅ your authorized user
+
+// export default function App() {
+//   const [user, setUser] = useState(null);
+  
+//   const [entries, setEntries] = useState([]);
+//   const [categories, setCategories] = useState([]);
+
+//   // 🔐 More reliable login
+//   const login = () => signInWithRedirect(auth, provider);
+//   const logout = () => signOut(auth).then(() => setUser(null));
+
+//   // 🔄 Restore auth on redirect login
+//   useEffect(() => {
+//     getRedirectResult(auth).then((result) => {
+//       if (result?.user) setUser(result.user);
+//     });
+//   }, []);
+
+//   // 🔍 Track auth state changes
+//   useEffect(() => {
+//     const unsubscribe = onAuthStateChanged(auth, (u) => setUser(u));
+//     return () => unsubscribe();
+//   }, []);
+
+//   // 📥 Load data only if authorized
+//   useEffect(() => {
+//     if (!user || user.email !== ALLOWED_EMAIL) return;
+
+//     const categoryRef = ref(db, "categories");
+//     onValue(categoryRef, (snapshot) => {
+//       const firebaseCategories = snapshot.val()
+//         ? Object.values(snapshot.val())
+//         : [];
+//       const customDefaults = ["Food", "Transportation", "Healthcare", "Income"];
+//       const combined = [...new Set([...customDefaults, ...firebaseCategories])];
+//       setCategories(combined);
+//     });
+
+//     const entriesRef = ref(db, "entries");
+//     onValue(entriesRef, (snapshot) => {
+//       const data = snapshot.val();
+//       const loaded = data
+//         ? Object.entries(data)
+//             .map(([id, value]) => ({ id, ...value }))
+//             .sort((a, b) => b.id - a.id)
+//         : [];
+//       setEntries(loaded.slice(0, 200));
+//     });
+//   }, [user]);
+
+//   const handleNewEntry = (entry) => {
+//     if (!user || user.email !== ALLOWED_EMAIL) return;
+
+//     push(ref(db, "entries"), {
+//       ...entry,
+//       id: Date.now(),
+//     });
+
+//     if (entry.category && !categories.includes(entry.category)) {
+//       push(ref(db, "categories"), entry.category);
+//     }
+//   };
+
+//   // 🚫 Block unauthorized access
+//   if (!user) {
+//     return (
+//       <div style={{ padding: "40px", textAlign: "center" }}>
+//         <h2>🔐 Please log in to access your tracker</h2>
+//         <button onClick={login}>Sign in with Google</button>
+//       </div>
+//     );
+//   }
+
+//   if (user.email !== ALLOWED_EMAIL) {
+//     return (
+//       <div style={{ padding: "40px", textAlign: "center", color: "red" }}>
+//         <h2>⛔ Access Denied</h2>
+//         <p>This app is restricted to a specific account.</p>
+//         <button onClick={logout}>Switch Account</button>
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className="app-container">
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "space-between",
+//           alignItems: "center",
+//         }}
+//       >
+//         <h1>Income & Expense Tracker</h1>
+//         <button onClick={logout}>Sign Out</button>
+//       </div>
+//       <Form onSubmit={handleNewEntry} categoryList={categories} />
+//       <EntryTable entries={entries} />
+//       <Dashboard entries={entries} />
+//     </div>
+//   );
+// }
 import React, { useEffect, useState } from "react";
 import Form from "./components/Form";
 import EntryTable from "./components/EntryTable";
@@ -720,6 +835,8 @@ const ALLOWED_EMAIL = "doobneek@gmail.com"; // ✅ your authorized user
 
 export default function App() {
   const [user, setUser] = useState(null);
+  const [authChecked, setAuthChecked] = useState(false); // ✅ added
+
   const [entries, setEntries] = useState([]);
   const [categories, setCategories] = useState([]);
 
@@ -729,16 +846,21 @@ export default function App() {
 
   // 🔄 Restore auth on redirect login
   useEffect(() => {
-    getRedirectResult(auth).then((result) => {
-      if (result?.user) setUser(result.user);
+    getRedirectResult(auth).catch((e) => {
+      console.error("Redirect error:", e.message);
     });
   }, []);
+  
 
   // 🔍 Track auth state changes
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (u) => setUser(u));
+    const unsubscribe = onAuthStateChanged(auth, (u) => {
+      setUser(u);
+      setAuthChecked(true); // ✅ mark auth as checked
+    });
     return () => unsubscribe();
   }, []);
+  
 
   // 📥 Load data only if authorized
   useEffect(() => {
@@ -779,7 +901,10 @@ export default function App() {
     }
   };
 
-  // 🚫 Block unauthorized access
+  if (!authChecked) {
+    return <div style={{ padding: "40px" }}>Loading...</div>;
+  }
+  
   if (!user) {
     return (
       <div style={{ padding: "40px", textAlign: "center" }}>
@@ -788,6 +913,7 @@ export default function App() {
       </div>
     );
   }
+  
 
   if (user.email !== ALLOWED_EMAIL) {
     return (
