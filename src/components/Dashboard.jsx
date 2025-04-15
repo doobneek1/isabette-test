@@ -166,7 +166,7 @@ export default function Dashboard({ entries }) {
   });
 
   const initialWealthDate = "2025-01-10";
-  const initialWealthValue = 250000;
+  const initialWealthValue = 253605+500+550+500+5000+4000;
 
   useEffect(() => {
     if (!entries || entries.length === 0) return;
