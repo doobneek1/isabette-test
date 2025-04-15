@@ -2693,6 +2693,9 @@ export default function Form({ onSubmit, categoryList }) {
       case 'Yearly':
         end.setFullYear(start.getFullYear() + recurrenceCount);
         break;
+      default:
+
+        break; 
     }
 
     setEndDate(end.toISOString().split('T')[0]);
