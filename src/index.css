@@ -1,4 +1,6 @@
-/* === Lightswitch-style toggle === */
+body {
+  font-family: Helvetica, Arial, sans-serif;
+}
 .toggle-wrapper {
   display: flex;
   align-items: center;
@@ -89,4 +91,18 @@ table tbody tr:nth-child(odd) {
   font-size: 16px;
   margin-top: 20px;
   margin-bottom: 10px;
+}
+button[type="submit"] {
+  background-color: #ccc;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: not-allowed;
+  color: white;
+}
+
+button[type="submit"].active {
+  background-color: #4caf50; /* Match toggle */
+  cursor: pointer;
 }
