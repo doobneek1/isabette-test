@@ -282,7 +282,7 @@ export default function Login({ onLogin, onDemoLogin, demoTyping }) {
 
   return (
     <form onSubmit={submit} style={{ padding: "40px", textAlign: "center" }}>
-      <h2>🔐 Email Login</h2>
+      <h2>🔐 Login to doobneek</h2>
       <input
         type="email"
         placeholder="Email"
