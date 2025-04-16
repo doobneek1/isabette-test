@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "data-2c98d"
-  }
+  },
+  "targets": {
+    "data-2c98d": {
+      "hosting": {
+        "test": [
+          "xpenser-dev"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
