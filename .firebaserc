@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "data-2c98d",
+    "staging": "data-2c98d"
+  },
+  "targets": {},
+  "etags": {}
+}
